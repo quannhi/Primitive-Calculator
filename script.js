@@ -7,14 +7,7 @@ display_text=[]
 let special_values = ['DEL','AC','NULL','=']
 let operators = ['+','-','x','/']
 function calculate(arr){
-    let a = '',b ='',operator=''
-    for (let char of arr){
-        if(!Number.isNaN(Number(char)) && !b && operator) a+= char;
-        else if (!Number.isNaN(Number(char)) && operator && a) b+= char; 
-        else if (Number.isNaN(Number(char)) && !b && a) operator += char;
-        else if (Number.isNaN(Number(char))&&operator) break 
-        else display.textContent= 'SYNTAX ERROR. PRESS AC TO RESET'
-    }
+    let a = arr[0],b = arr[2],operator=arr[1]
     if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) display.textContent= 'ERROR. PRESS AC TO RESET'
     a = Number(a)
     b = Number(b)
@@ -27,6 +20,8 @@ function calculate(arr){
             return a*b
         case '/':
             return a/b
+        default: 
+            return 'ERROR'
     }
 }
 for (let value of button_values){
@@ -39,8 +34,13 @@ for (let value of button_values){
 buttons.addEventListener('mousedown', (e)=>{
     const button = e.target.closest('button')
     if(!special_values.includes(button.textContent)) {
-        display_text.push(button.textContent)
-        display.textContent=display_text.join('')
+        if (!operators.includes(button.textContent) && !Number.isNaN(Number(display_text[-1]))){
+            display_text[-1]+= button.textContent
+            display.textContent=display_text.join('')
+        } else{
+            display_text.push(button.textContent)
+            display.textContent=display_text.join('')
+        }
     }else{
         switch(button.textContent){
             case 'AC':
@@ -52,6 +52,7 @@ buttons.addEventListener('mousedown', (e)=>{
                 display.textContent=display_text.join('')
                 break
             case '=':
+                console.log(display_text)
                 let result = calculate(display_text)
                 display_text.splice(0,3,result)
                 display.textContent=display_text.join('')
