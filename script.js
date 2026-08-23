@@ -8,7 +8,9 @@ let special_values = ['DEL','AC','NULL','=']
 let operators = ['+','-','x','/']
 function calculate(arr){
     let a = arr[0],b = arr[2],operator=arr[1]
-    if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) display.textContent= 'ERROR. PRESS AC TO RESET'
+    if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
+        return 'ERROR. PRESS AC TO RESET'
+    }
     a = Number(a)
     b = Number(b)
     switch (operator){
@@ -57,6 +59,7 @@ buttons.addEventListener('mousedown', (e)=>{
             case '=':
                 console.log(display_text)
                 let result = calculate(display_text)
+                if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(0,3,result)
                 display_text.splice(0,3,result)
                 display.textContent=display_text.join('')
         }
