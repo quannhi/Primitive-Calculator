@@ -6,9 +6,10 @@ let button_values = [7,8,9,'DEL', 'AC', 4,5,6,'x', '/', 1,2,3,'+','-',0,'.','NUL
 display_text=[]
 let special_values = ['DEL','AC','NULL','=']
 let operators = ['+','-','x','/']
-function calculate(arr){
-    let a = arr[0],b = arr[2],operator=arr[1]
+function calculate(arr, operator_index = 1){
+    let a = arr[operator_index-1],b = arr[operator_index+1],operator=arr[operator_index]
     if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
+        console.log(`${a} and ${b}`)
         return 'ERROR. PRESS AC TO RESET'
     }
     a = Number(a)
@@ -58,10 +59,29 @@ buttons.addEventListener('mousedown', (e)=>{
                 break
             case '=':
                 console.log(display_text)
+                // checking for mix of high and low priority operators
+                while (['x', '/'].some(item => display_text.includes(item)) && ['+','-'].some(item=> display_text.includes(item))){
+                    while(['x'].some(item=>display_text.includes(item))){
+                        let operator_index= display_text.indexOf('x')
+                        let result = calculate(display_text, operator_index)
+                        console.log(`op index: ${operator_index}`)
+                        
+                        if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(operator_index-1,operator_index+2,result)
+                        display.textContent=display_text.join('')
+                    }
+                    while(['/'].some(item=>display_text.includes(item))){
+                        let operator_index= display_text.indexOf('/')
+                        let result = calculate(display_text, operator_index)
+                        console.log(`op index: ${operator_index}`)
+                        if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(operator_index-1,operator_index+2,result)
+                        display.textContent=display_text.join('')
+                    }
+                    break
+                }
                 let result = calculate(display_text)
                 if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(0,3,result)
-                display_text.splice(0,3,result)
                 display.textContent=display_text.join('')
+                
         }
     }
     if(!button)return;
