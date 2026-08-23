@@ -1,32 +1,61 @@
 *{
     font-family: 'Roboto';
 }
+
+.container{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    border-radius: 6px;
+}
 body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    background-color: rgb(159, 152, 152);
+    flex-grow: 1;
+    min-height: 100vh;
+
 }
 .button{
     width: 100px;
-    aspect-ratio: 1.5;
-    background-color: rgb(221, 220, 220);
+    height: 50px;
+    background-color: rgb(222, 218, 218);
     color: black;
     margin-top: 10px;
     box-sizing: border-box;
     border-radius: 6px;
     font-size: 30px;
+    flex-shrink: 0;
+}
+.button_container{
+    width: 560px;
+    min-height: 240px;
+    background-color: black;
+    border-radius: 6px;
+    margin-top: 5px;
+    padding: 6px;
+    box-sizing:border-box
 }
 .buttons{
+    box-sizing:border-box;
     display: flex;
     flex-wrap: wrap;
     width: 540px;
-    height: 200px;
+    min-height: 240px;
     justify-content: space-between;
+    flex-grow: 1;
+}
+.button:active{
+    background-color: rgb(159, 152, 152);
 }
 .display{
-    width: 540px;
+    box-sizing: border-box;
+    width: 560px;
     height: 100px;
-    background-color: rgb(201, 217, 203);
+    background-color: rgb(178, 194, 175);
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;

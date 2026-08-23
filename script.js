@@ -6,6 +6,7 @@ let button_values = [7,8,9,'DEL', 'AC', 4,5,6,'x', '/', 1,2,3,'+','-',0,'.','NUL
 display_text=[]
 let special_values = ['DEL','AC','NULL','=']
 let operators = ['+','-','x','/']
+globalThis.result_seen=false
 function calculate(arr, operator_index = 1){
     let a = arr[operator_index-1],b = arr[operator_index+1],operator=arr[operator_index]
     if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
@@ -37,13 +38,18 @@ for (let value of button_values){
 buttons.addEventListener('mousedown', (e)=>{
     const button = e.target.closest('button')
     if(!special_values.includes(button.textContent)) {
+        if (result_seen){
+        display_text=[String(button.textContent)]
+        display.textContent=display_text
+        globalThis.result_seen=false
+        } else {
         if (!operators.includes(button.textContent) && !Number.isNaN(Number(display_text[display_text.length -1]))){
             display_text[display_text.length -1]+= String(button.textContent)
             display.textContent=display_text.join('')
         } else{
             display_text.push(String(button.textContent))
             display.textContent=display_text.join('')
-        }
+        }}
     }else{
         switch(button.textContent){
             case 'AC':
@@ -51,6 +57,7 @@ buttons.addEventListener('mousedown', (e)=>{
                 display.textContent=display_text.join('')
                 break
             case 'DEL':
+                if (display_text[display_text.length-1] == '') display_text.splice(display_text.length-1,1)
                 let trimmed = String(display_text[display_text.length -1]).slice(0,-1)
                 console.log(trimmed)
                 display_text.splice(display_text.length -1,1,trimmed)
@@ -80,7 +87,10 @@ buttons.addEventListener('mousedown', (e)=>{
                 let result = calculate(display_text,1)
                 if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else console.log(display_text.splice(0,3,result))
                 display.textContent=display_text.join('')
-                if (display_text.length == 1) repeat = false 
+                if (display_text.length == 1){
+                    repeat = false
+                    globalThis.result_seen = true
+                }
                 }
                 
                 
