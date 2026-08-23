@@ -9,7 +9,7 @@ let operators = ['+','-','x','/']
 function calculate(arr, operator_index = 1){
     let a = arr[operator_index-1],b = arr[operator_index+1],operator=arr[operator_index]
     if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
-        console.log(`${a} and ${b}`)
+        console.log(`ERROR OCCURRED, A AND B: ${a} and ${b}`)
         return 'ERROR. PRESS AC TO RESET'
     }
     a = Number(a)
@@ -53,34 +53,36 @@ buttons.addEventListener('mousedown', (e)=>{
             case 'DEL':
                 let trimmed = String(display_text[display_text.length -1]).slice(0,-1)
                 console.log(trimmed)
-                display_text.splice(display_text.length -2,1,trimmed)
+                display_text.splice(display_text.length -1,1,trimmed)
                 console.log(display_text)
                 display.textContent=display_text.join('')
                 break
             case '=':
                 console.log(display_text)
-                // checking for mix of high and low priority operators
-                while (['x', '/'].some(item => display_text.includes(item)) && ['+','-'].some(item=> display_text.includes(item))){
-                    while(['x'].some(item=>display_text.includes(item))){
-                        let operator_index= display_text.indexOf('x')
-                        let result = calculate(display_text, operator_index)
-                        console.log(`op index: ${operator_index}`)
-                        
-                        if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(operator_index-1,operator_index+2,result)
-                        display.textContent=display_text.join('')
+                let repeat = true
+                let operator_indexes=[]
+                let buffer = 2
+                if (['x', '/'].some(item => display_text.includes(item)) && ['+','-'].some(item=> display_text.includes(item))){
+                    for (let index = 0; index < display_text.length; index++){
+                        if (display_text[index] == '/' || display_text[index] == 'x'){
+                            operator_indexes.push(index)
+                        }
                     }
-                    while(['/'].some(item=>display_text.includes(item))){
-                        let operator_index= display_text.indexOf('/')
-                        let result = calculate(display_text, operator_index)
-                        console.log(`op index: ${operator_index}`)
-                        if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(operator_index-1,operator_index+2,result)
+                    for (let operator_index of operator_indexes){
+                        buffer -=2
+                        let result = String(calculate(display_text, operator_index+buffer))
+                        console.log(`op index: ${operator_index+buffer}`)
+                        if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else console.log(display_text.splice(operator_index+buffer-1,3,result))
                         display.textContent=display_text.join('')
+                    }  
                     }
-                    break
-                }
-                let result = calculate(display_text)
-                if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else display_text.splice(0,3,result)
+                while(repeat){              
+                let result = calculate(display_text,1)
+                if (result === 'ERROR. PRESS AC TO RESET') display_text=[result]; else console.log(display_text.splice(0,3,result))
                 display.textContent=display_text.join('')
+                if (display_text.length == 1) repeat = false 
+                }
+                
                 
         }
     }
