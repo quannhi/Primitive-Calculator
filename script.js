@@ -34,11 +34,11 @@ for (let value of button_values){
 buttons.addEventListener('mousedown', (e)=>{
     const button = e.target.closest('button')
     if(!special_values.includes(button.textContent)) {
-        if (!operators.includes(button.textContent) && !Number.isNaN(Number(display_text[-1]))){
-            display_text[-1]+= button.textContent
+        if (!operators.includes(button.textContent) && !Number.isNaN(Number(display_text[display_text.length -1]))){
+            display_text[display_text.length -1]+= String(button.textContent)
             display.textContent=display_text.join('')
         } else{
-            display_text.push(button.textContent)
+            display_text.push(String(button.textContent))
             display.textContent=display_text.join('')
         }
     }else{
@@ -48,7 +48,10 @@ buttons.addEventListener('mousedown', (e)=>{
                 display.textContent=display_text.join('')
                 break
             case 'DEL':
-                display_text= display_text.slice(0,-1)
+                let trimmed = String(display_text[display_text.length -1]).slice(0,-1)
+                console.log(trimmed)
+                display_text.splice(display_text.length -2,1,trimmed)
+                console.log(display_text)
                 display.textContent=display_text.join('')
                 break
             case '=':
